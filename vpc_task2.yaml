@@ -2,7 +2,7 @@ AWSTemplateFormatVersion: 2010-09-09
 Description: Create vpc using CloudFormation and automation with AWS CodePipeline
 
 Resources: 
-  VPC_nhom20: 
+  VPCnhom20: 
     Type: AWS::EC2::VPC
     Properties:
       CidrBlock: 10.0.0.0/16
@@ -11,7 +11,7 @@ Resources:
         - Key: Name
           Value: nhom20Vpc
 
-  igw_nhom20:
+  igwnhom20:
     Type: AWS::EC2::InternetGateway
     Properties:
       Tags:
@@ -21,15 +21,15 @@ Resources:
     Type: AWS::EC2::VPCGatewayAttachment
     Properties:
       VpcId: 
-        Ref: VPC_nhom20
+        Ref: VPCnhom20
       InternetGatewayId: 
-        Ref: igw_nhom20
+        Ref: igwnhom20
     
   publicSubnet:
     Type: AWS::EC2::Subnet
     Properties:
       VpcId:
-        Ref: VPC_nhom20
+        Ref: VPCnhom20
       CidrBlock: 10.0.1.0/24
       AvailabilityZone: !Select
         - '0'
@@ -42,7 +42,7 @@ Resources:
     Type: AWS::EC2::Subnet
     Properties:
       VpcId: 
-        Ref: VPC_nhom20
+        Ref: VPCnhom20
       CidrBlock: 10.0.2.0/24
       AvailabilityZone: !Select
         - '0'
@@ -55,7 +55,7 @@ Resources:
     Type: AWS::EC2::RouteTable
     Properties:
       VpcId:
-        Ref: VPC_nhom20
+        Ref: VPCnhom20
       Tags:
         - Key: Name
           Value: publicRoutetable
@@ -67,7 +67,7 @@ Resources:
         Ref: publicRT
       DestinationCidrBlock: 0.0.0.0/0
       GatewayId: 
-        Ref: igw_nhom20
+        Ref: igwnhom20
 
   publicSubnetRTA:
     Type: AWS::EC2::SubnetRouteTableAssociation
@@ -97,7 +97,7 @@ Resources:
     Type: AWS::EC2::RouteTable
     Properties:
       VpcId:
-        Ref: VPC_nhom20
+        Ref: VPCnhom20
       Tags:
         - Key: Name
           Value: privateRoutetable
@@ -125,7 +125,7 @@ Resources:
     Properties:
       GroupDescription: allow ssh and http access to public instance
       VpcId:
-        Ref: VPC_nhom20
+        Ref: VPCnhom20
       SecurityGroupIngress:
         - IpProtocol: tcp
           FromPort: 22
@@ -140,7 +140,7 @@ Resources:
     Properties:
       GroupDescription: allow ssh from public instance
       VpcId:
-        Ref: VPC_nhom20
+        Ref: VPCnhom20
       SecurityGroupIngress:
         - IpProtocol: tcp
           FromPort: 22
@@ -178,7 +178,7 @@ Outputs:
   VPC: 
     Description: VPC
     Value: 
-      Ref: VPC_nhom20
+      Ref: VPCnhom20
 
   PublicSubnet:
     Description: "Public Subnet"

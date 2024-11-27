@@ -6,7 +6,6 @@ Resources:
     Type: AWS::EC2::VPC
     Properties:
       CidrBlock: 10.0.0.0/16
-      EnableDnsHostname: true
       Tags:
         - Key: Name
           Value: nhom20Vpc

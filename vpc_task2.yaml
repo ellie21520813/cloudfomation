@@ -154,7 +154,7 @@ Resources:
         Ref: publicSubnet
       SecurityGroupIds:
         - Ref: publicISG
-      ImageId: ami-0c55b159cbfafe1f0
+      ImageId: ami-0866a3c8686eaeeba
       Tags:
         - Key: Name
           Value: PublicInstance

@@ -1,7 +1,7 @@
 AWSTemplateFormatVersion: 2010-09-09
 Description: Create vpc using CloudFormation and automation with AWS CodePipeline
 
-Resource: 
+Resources: 
   VPC_nhom20: 
     Type: AWS::EC2::VPC
     Properties:
@@ -31,7 +31,7 @@ Resource:
       VpcId:
         Ref: VPC_nhom20
       CidrBlock: 10.0.1.0/24
-      Availabilityzone: !Select
+      AvailabilityZone: !Select
         - '0'
         - !GetAZs ''
       Tags:
@@ -44,7 +44,7 @@ Resource:
       VpcId: 
         Ref: VPC_nhom20
       CidrBlock: 10.0.2.0/24
-      Availabilityzone: !Select
+      AvailabilityZone: !Select
         - '0'
         - !GetAZs ''
       Tags:
@@ -78,11 +78,11 @@ Resource:
         Ref: publicRT
 
   natGateway:
-    Type: AWS::EC2::NatGateWay
+    Type: AWS::EC2::NatGateway  
     Properties:
       AllocationId: !GetAtt NATGatewayEIP.AllocationId
       SubnetId: 
-        Ref: privateSubnet
+        Ref: publicSubnet  
       Tags:
         - Key: Name
           Value: natgw
@@ -130,7 +130,7 @@ Resource:
         - IpProtocol: tcp
           FromPort: 22
           ToPort: 22
-          CidrIP:  172.16.0.95/32
+          CidrIp:  172.16.0.95/32
       Tags:
         - Key: Name
           Value: PublicInstanceSG

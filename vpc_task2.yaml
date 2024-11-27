@@ -77,6 +77,11 @@ Resources:
       RouteTableId:
         Ref: publicRT
 
+  natgwEIP:
+    Type: AWS::EC2::EIP
+    Properties:
+      Domain: vpc
+
   natGateway:
     Type: AWS::EC2::NatGateway  
     Properties:
@@ -86,12 +91,6 @@ Resources:
       Tags:
         - Key: Name
           Value: natgw
-
-  natgwEIP:
-    Type: AWS::EC2::EIP
-    Properties:
-      Domain: vpc
-
   
   privateRT:
     Type: AWS::EC2::RouteTable

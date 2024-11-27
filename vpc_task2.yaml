@@ -85,7 +85,7 @@ Resources:
   natGateway:
     Type: AWS::EC2::NatGateway  
     Properties:
-      AllocationId: !GetAtt NatgwEIP.AllocationId
+      AllocationId: !GetAtt natgwEIP.AllocationId
       SubnetId: 
         Ref: publicSubnet  
       Tags:

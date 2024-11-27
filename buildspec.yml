@@ -12,3 +12,6 @@ phases:
       - cfn-lint ./vpc_task2.yaml
       - echo "Running taskcat to test the deployment"
       - taskcat test run
+artifacts:
+  files:
+    - '**/*'

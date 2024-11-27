@@ -167,7 +167,7 @@ Resources:
         Ref: privateSubnet
       SecurityGroupIds:
         - Ref: privateISG
-      ImageId: ami-0c55b159cbfafe1f0
+      ImageId: ami-0866a3c8686eaeeba
       Tags:
         - Key: Name
           Value: PrivateInstance

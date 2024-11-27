@@ -1,0 +1,14 @@
+version: 0.2
+
+phases:
+  install:
+    commands:
+      - echo "Installing dependencies..."
+      - pip install cfn-lint
+      - pip install taskcat
+  build:
+    commands:
+      - echo "Running cfn-lint to validate CloudFormation template"
+      - cfn-lint ./vpc_task2.yaml
+      - echo "Running taskcat to test the deployment"
+      - taskcat test run

@@ -1,0 +1,201 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: Create vpc using CloudFormation and automation with AWS CodePipeline
+
+Resource: 
+  VPC_nhom20: 
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 10.0.0.0/16
+      EnableDnsHostname: true
+      Tags:
+        - Key: Name
+          Value: nhom20Vpc
+
+  igw_nhom20:
+    Type: AWS::EC2::InternetGateway
+    Properties:
+      Tags:
+        - Key: keyname
+          Value: value
+  AttachGateway:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      VpcId: 
+        Ref: VPC_nhom20
+      InternetGatewayId: 
+        Ref: igw_nhom20
+    
+  publicSubnet:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId:
+        Ref: VPC_nhom20
+      CidrBlock: 10.0.1.0/24
+      Availabilityzone: !Select
+        - '0'
+        - !GetAZs ''
+      Tags:
+        - Key: Name
+          Value: publicSubnet
+  
+  privateSubnet:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: 
+        Ref: VPC_nhom20
+      CidrBlock: 10.0.2.0/24
+      Availabilityzone: !Select
+        - '0'
+        - !GetAZs ''
+      Tags:
+        - Key: Name
+          Value: privateSubnet
+
+  publicRT:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId:
+        Ref: VPC_nhom20
+      Tags:
+        - Key: Name
+          Value: publicRoutetable
+  
+  publicRoute:
+    Type: AWS::EC2::Route
+    Properties:
+      RouteTableId:
+        Ref: publicRT
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: 
+        Ref: igw_nhom20
+
+  publicSubnetRTA:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: 
+        Ref: publicSubnet
+      RouteTableId:
+        Ref: publicRT
+
+  natGateway:
+    Type: AWS::EC2::NatGateWay
+    Properties:
+      AllocationId: !GetAtt NATGatewayEIP.AllocationId
+      SubnetId: 
+        Ref: privateSubnet
+      Tags:
+        - Key: Name
+          Value: natgw
+
+  natgwEIP:
+    Type: AWS::EC2::EIP
+    Properties:
+      Domain: vpc
+
+  
+  privateRT:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId:
+        Ref: VPC_nhom20
+      Tags:
+        - Key: Name
+          Value: privateRoutetable
+  
+  privateRoute:
+    Type: AWS::EC2::Route
+    Properties:
+      RouteTableId:
+        Ref: privateRT
+      DestinationCidrBlock: 0.0.0.0/0
+
+      NatGatewayId: 
+        Ref: natGateway
+
+  privateRTA:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId:
+        Ref: privateSubnet
+      RouteTableId:
+        Ref: privateRT
+  
+  publicISG:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: allow ssh and http access to public instance
+      VpcId:
+        Ref: VPC_nhom20
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIP:  172.16.0.95/32
+      Tags:
+        - Key: Name
+          Value: PublicInstanceSG
+
+  privateISG:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: allow ssh from public instance
+      VpcId:
+        Ref: VPC_nhom20
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          SourceSecurityGroupId: 
+            Ref: publicISG
+  
+  publicInstance:
+    Type: AWS::EC2::Instance
+    Properties:       
+      InstanceType: t2.micro
+      SubnetId: 
+        Ref: publicSubnet
+      SecurityGroupIds:
+        - Ref: publicISG
+      ImageId: ami-0c55b159cbfafe1f0
+      Tags:
+        - Key: Name
+          Value: PublicInstance
+
+  privateInstance:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: t2.micro
+      SubnetId:
+        Ref: privateSubnet
+      SecurityGroupIds:
+        - Ref: privateISG
+      ImageId: ami-0c55b159cbfafe1f0
+      Tags:
+        - Key: Name
+          Value: PrivateInstance
+
+Output:
+  VPC: 
+    Description: VPC
+    Value: 
+      Ref: VPC_nhom20
+
+  PublicSubnet:
+    Description: "Public Subnet"
+    Value: 
+      Ref: publicSubnet
+
+  PrivateSubnet:
+    Description: "Private Subnet"
+    Value: 
+      Ref: privateSubnet
+
+  PublicInstance:
+    Description: "Public EC2 Instance"
+    Value: 
+      Ref: publicInstance
+
+  PrivateInstance:
+    Description: "Private EC2 Instance"
+    Value: 
+      Ref: privateInstance

@@ -174,7 +174,7 @@ Resources:
         - Key: Name
           Value: PrivateInstance
 
-Output:
+Outputs:
   VPC: 
     Description: VPC
     Value: 

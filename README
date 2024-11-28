@@ -1,0 +1,9 @@
+CloudFormation Project Setup Guide
+This guide will help you set up and deploy the infrastructure using CloudFormation, AWS CodeBuild, AWS CodePipeline
+
+Deployment Steps
+
+Project Structure
+vpc_task2.yaml: CloudFormation file setup resources
+.taskcat.yml: file test for .taskcat.yml
+buildspec.yml: setup for AWS CodeBuild

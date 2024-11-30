@@ -1,9 +1,16 @@
 CloudFormation Project Setup Guide
-This guide will help you set up and deploy the infrastructure using CloudFormation, AWS CodeBuild, AWS CodePipeline
+1. Prerequisites
+Install AWS CLI: Ensure you have installed and configured AWS CLI with the appropriate Access Key and Secret Key.
+AWS Account: You need an AWS account with permissions to use CloudFormation, CodeBuild, and CodePipeline.
+Configure IAM Roles:
+Create IAM roles for CodeBuild and CodePipeline with the necessary permissions.
+Ensure the roles include actions such as cloudformation:CreateStack, codebuild:StartBuild, and codepipeline:StartPipelineExecution.
+2. Project Structure: 
+vpc_task2.yaml; A CloudFormation template describing the resources to deploy.
+vpc_task2.yaml: Used by AWS CodeBuild, this file defines the commands to execute during the build phase.
+.taskcat.yml: Configuration for TaskCat to test CloudFormation templates.
+3. Deployment Steps
+Step 1: Create a Build Project with AWS CodeBuild
+Step 2: Create a Pipeline with AWS CodePipeline
 
-Deployment Steps
 
-Project Structure
-vpc_task2.yaml: CloudFormation file setup resources
-.taskcat.yml: file test for .taskcat.yml
-buildspec.yml: setup for AWS CodeBuild
